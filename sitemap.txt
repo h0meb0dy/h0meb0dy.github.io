@@ -1,3 +1,4 @@
+https://h0meb0dy.github.io/2024/02/01/V8-OOB-Exploitation-Chromium-80-0-3987-87-V8-8-0-357/
 https://h0meb0dy.github.io/2024/11/16/test/
 https://h0meb0dy.github.io/1970/01/01/hello-world/
 https://h0meb0dy.github.io/about/index.html
@@ -5,4 +6,9 @@ https://h0meb0dy.github.io/search/index.html
 https://h0meb0dy.github.io/
 https://h0meb0dy.github.io/tags/tag1/
 https://h0meb0dy.github.io/tags/tag2/
+https://h0meb0dy.github.io/tags/chromium/
+https://h0meb0dy.github.io/tags/v8/
+https://h0meb0dy.github.io/tags/browser/
 https://h0meb0dy.github.io/categories/category1/
+https://h0meb0dy.github.io/categories/Write-up/
+https://h0meb0dy.github.io/categories/Write-up/chromium/
