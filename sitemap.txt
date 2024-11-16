@@ -1,3 +1,4 @@
+https://h0meb0dy.github.io/2023/12/02/V8-OOB-Exploitation-Chromium-100-0-4896-60-V8-10-0-136/
 https://h0meb0dy.github.io/2024/02/01/V8-OOB-Exploitation-Chromium-80-0-3987-87-V8-8-0-357/
 https://h0meb0dy.github.io/about/index.html
 https://h0meb0dy.github.io/search/index.html
@@ -6,3 +7,4 @@ https://h0meb0dy.github.io/tags/chromium/
 https://h0meb0dy.github.io/tags/v8/
 https://h0meb0dy.github.io/tags/browser/
 https://h0meb0dy.github.io/categories/Write-up/
+https://h0meb0dy.github.io/categories/write-up/
