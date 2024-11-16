@@ -4,44 +4,19 @@
   
     
     <entry>
-      <title>v8</title>
-      <link href="/2024/11/16/v8/"/>
-      <url>/2024/11/16/v8/</url>
-      
-        <content type="html"><![CDATA[]]></content>
-      
-      
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>test</title>
-      <link href="/2024/11/14/test/"/>
-      <url>/2024/11/14/test/</url>
+      <link href="/2023/12/01/test/"/>
+      <url>/2023/12/01/test/</url>
       
         <content type="html"><![CDATA[<p>Test test 12345 한글 한글<br>가나다라가나다라</p><p>마바사아마바사아</p><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> <span class="title function_">main</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="built_in">printf</span>(<span class="string">&quot;Hello World!\n&quot;</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">whoami</span></span></span><br><span class="line">h0meb0dy</span><br></pre></td></tr></table></figure>]]></content>
       
       
-      <categories>
-          
-          <category> category1 </category>
-          
-          <category> category2 </category>
-          
-          <category> category3 </category>
-          
-      </categories>
-      
       
         <tags>
             
-            <tag> tag1 </tag>
+            <tag> chromium </tag>
             
-            <tag> tag2 </tag>
-            
-            <tag> tag3 </tag>
+            <tag> v8 </tag>
             
         </tags>
       
