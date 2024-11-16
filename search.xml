@@ -4,6 +4,33 @@
   
     
     <entry>
+      <title>test</title>
+      <link href="/2024/11/16/test/"/>
+      <url>/2024/11/16/test/</url>
+      
+        <content type="html"><![CDATA[]]></content>
+      
+      
+      <categories>
+          
+          <category> category1 </category>
+          
+      </categories>
+      
+      
+        <tags>
+            
+            <tag> tag1 </tag>
+            
+            <tag> tag2 </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>Hello World</title>
       <link href="/1970/01/01/hello-world/"/>
       <url>/1970/01/01/hello-world/</url>
