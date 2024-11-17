@@ -7,4 +7,3 @@ https://h0meb0dy.github.io/tags/chromium/
 https://h0meb0dy.github.io/tags/v8/
 https://h0meb0dy.github.io/tags/browser/
 https://h0meb0dy.github.io/categories/Write-up/
-https://h0meb0dy.github.io/categories/write-up/
