@@ -2,6 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://h0meb0dy.github.io/about/index.html</loc>
+    
+    <lastmod>2024-11-19</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://h0meb0dy.github.io/tags/index.html</loc>
     
     <lastmod>2024-11-17</lastmod>
@@ -41,15 +50,6 @@
     <loc>https://h0meb0dy.github.io/2024/02/03/V8-OOB-Exploitation-Chromium-103-0-5060-53-V8-10-5-23/</loc>
     
     <lastmod>2024-11-17</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
-    <loc>https://h0meb0dy.github.io/about/index.html</loc>
-    
-    <lastmod>2024-11-16</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
