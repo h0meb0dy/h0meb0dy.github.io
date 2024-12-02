@@ -49,7 +49,7 @@
     </url>
 
     <url>
-        <loc>https://h0meb0dy.github.io/2023/07/01/CVE-2020-6418-Type-confusion-in-V8/</loc>
+        <loc>https://h0meb0dy.github.io/2023/07/01/cve-2020-6418/</loc>
         <lastmod>2024-12-01T05:44:38.105Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -57,7 +57,7 @@
     </url>
 
     <url>
-        <loc>https://h0meb0dy.github.io/2023/06/01/starCTF-2019-pwnable-oob-v8/</loc>
+        <loc>https://h0meb0dy.github.io/2023/06/01/*ctf-2019-oob-v8/</loc>
         <lastmod>2024-12-01T04:42:20.756Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
