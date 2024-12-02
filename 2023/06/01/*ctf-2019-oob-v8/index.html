@@ -24,7 +24,7 @@
 <meta property="og:image" content="https://github.com/user-attachments/assets/d4853ae4-9447-475a-801d-e6518be4b09c">
 <meta property="og:image" content="https://github.com/user-attachments/assets/9b45934e-ddb7-4690-8d9b-a8ffc9b97525">
 <meta property="article:published_time" content="2023-06-01T03:00:00.000Z">
-<meta property="article:modified_time" content="2024-12-01T04:42:20.756Z">
+<meta property="article:modified_time" content="2024-12-02T10:15:27.189Z">
 <meta property="article:author" content="Seongjoon Cho">
 <meta property="article:tag" content="chromium">
 <meta property="article:tag" content="v8">
@@ -209,15 +209,15 @@
 <h2 id="Exploitation"><a href="#Exploitation" class="headerlink" title="Exploitation"></a>Exploitation</h2><h3 id="Addrof-fakeobj"><a href="#Addrof-fakeobj" class="headerlink" title="Addrof &#x2F; fakeobj"></a>Addrof &#x2F; fakeobj</h3><p>OOB를 이용하여 임의의 array에서 elements의 바로 뒤쪽에 위치한 자기 자신의 map을 읽거나 덮어쓸 수 있다.</p>
 <p><img src="https://github.com/user-attachments/assets/9c73e077-e94c-47ee-bb1b-9f663e92cdcc" alt="image"></p>
 <p><img src="https://github.com/user-attachments/assets/bcff069a-01ef-4a01-9bbd-a12bc32e01d0" alt="image"></p>
-<p>Object array의 map을 float array의 map으로 덮어쓰면 object array에 저장된 object를 읽어올때 float 형태로 가져오게 된다. 이 원리로 임의의 object의 주소를 구하는 <code>addrof</code> primitive를 구현할 수 있다. 반대로, object array에 float을 저장하고 다시 원래의 map을 복구하면 그 float이 object의 주소가 된다. 이 원리로 임의의 주소에 fake object를 생성하는 <code>fakeobj</code> primitive를 구현할 수 있다.</p>
+<p>Object array의 map을 float array의 map으로 덮어쓰면 object array에 저장된 object를 읽어올때 float number로 가져오게 된다. 이 원리로 임의의 object의 주소를 구하는 <code>addrof</code> primitive를 구현할 수 있다. 반대로, object array에 float number를 저장하고 다시 원래의 map을 복구하면 그 float number가 object의 주소가 된다. 이 원리로 임의의 주소에 fake object를 생성하는 <code>fakeobj</code> primitive를 구현할 수 있다.</p>
 <h3 id="AAR-AAW"><a href="#AAR-AAW" class="headerlink" title="AAR &#x2F; AAW"></a>AAR &#x2F; AAW</h3><p>Float array의 구조를 만들고 그 위치에 fake object를 생성하면 elements 포인터를 임의의 주소로 설정하여 그 주소에 저장된 8바이트 값을 읽고 쓸 수 있다.</p>
 <p>8바이트 AAW를 이용하여 <code>ArrayBuffer</code>의 backing store를 임의의 주소로 덮어쓰면 그 주소에 <code>ArrayBuffer</code>의 크기만큼 임의의 값을 쓸 수 있다.</p>
 <p><img src="https://github.com/user-attachments/assets/0e7fd867-3122-47c4-9cee-e3022208f9d9" alt="image"></p>
 <p><img src="https://github.com/user-attachments/assets/73871fe3-6e7d-444d-b196-8b0d3a46e78d" alt="image"></p>
-<h3 id="Execute-shellcode"><a href="#Execute-shellcode" class="headerlink" title="Execute shellcode"></a>Execute shellcode</h3><p>WebAssembly instance를 생성하면 WebAssembly code를 실행하기 위해 RWX 권한을 가진 메모리가 할당된다.</p>
+<h3 id="Execute-shellcode"><a href="#Execute-shellcode" class="headerlink" title="Execute shellcode"></a>Execute shellcode</h3><p>WebAssembly instance를 생성하면 WebAssembly code를 실행하기 위해 RWX permission을 가진 메모리가 할당된다.</p>
 <p><img src="https://github.com/user-attachments/assets/ecdb3567-0670-4c01-998c-fc2d9c6a57da" alt="image"></p>
 <p><img src="https://github.com/user-attachments/assets/8be0dc12-7338-43b8-81a8-a226e8372ce1" alt="image"></p>
-<p>이 영역에 저장된 코드를 shellcode로 덮어쓰고 WebAssembly instance의 exported function을 실행하면 shellcode를 실행할 수 있다.</p>
+<p>이 영역에 shellcode를 쓰고 WebAssembly instance의 exported function을 실행하면 shellcode를 실행할 수 있다.</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/CTF/tree/main/starCTF/2019/oob-v8/pwn.js">pwn.js</a></p>
 <p><img src="https://github.com/user-attachments/assets/d4853ae4-9447-475a-801d-e6518be4b09c" alt="image"></p>
 <p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/CTF/tree/main/starCTF/2019/oob-v8/pwn.html">pwn.html</a></p>

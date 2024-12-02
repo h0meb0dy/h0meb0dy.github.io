@@ -9,6 +9,14 @@
 
 
     <url>
+        <loc>https://h0meb0dy.github.io/2023/06/01/*ctf-2019-oob-v8/</loc>
+        <lastmod>2024-12-02T10:15:27.189Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://h0meb0dy.github.io/2023/07/01/cve-2020-6418/</loc>
         <lastmod>2024-12-02T09:52:04.889Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -51,14 +59,6 @@
     <url>
         <loc>https://h0meb0dy.github.io/2024/02/02/v8-oob-exploitation-2/</loc>
         <lastmod>2024-12-02T09:06:45.620Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://h0meb0dy.github.io/2023/06/01/*ctf-2019-oob-v8/</loc>
-        <lastmod>2024-12-01T04:42:20.756Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
