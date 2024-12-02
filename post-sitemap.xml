@@ -9,6 +9,46 @@
 
 
     <url>
+        <loc>https://h0meb0dy.github.io/2024/02/05/v8-oob-exploitation-5/</loc>
+        <lastmod>2024-12-02T09:07:12.390Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://h0meb0dy.github.io/2024/02/04/v8-oob-exploitation-4/</loc>
+        <lastmod>2024-12-02T09:07:01.911Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://h0meb0dy.github.io/2024/02/03/v8-oob-exploitation-3/</loc>
+        <lastmod>2024-12-02T09:06:54.362Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://h0meb0dy.github.io/2024/02/02/v8-oob-exploitation-2/</loc>
+        <lastmod>2024-12-02T09:06:45.620Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://h0meb0dy.github.io/2024/02/01/v8-oob-exploitation-1/</loc>
+        <lastmod>2024-12-02T09:06:36.234Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://h0meb0dy.github.io/2023/07/01/CVE-2020-6418-Type-confusion-in-V8/</loc>
         <lastmod>2024-12-01T05:44:38.105Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -19,46 +59,6 @@
     <url>
         <loc>https://h0meb0dy.github.io/2023/06/01/starCTF-2019-pwnable-oob-v8/</loc>
         <lastmod>2024-12-01T04:42:20.756Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://h0meb0dy.github.io/2024/02/05/V8-OOB-Exploitation-Chromium-122-0-6261-57-V8-12-2-170/</loc>
-        <lastmod>2024-11-30T07:18:14.793Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://h0meb0dy.github.io/2024/02/04/V8-OOB-Exploitation-Chromium-117-0-5938-62-V8-11-7-369/</loc>
-        <lastmod>2024-11-30T07:18:09.982Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://h0meb0dy.github.io/2024/02/03/V8-OOB-Exploitation-Chromium-103-0-5060-53-V8-10-5-23/</loc>
-        <lastmod>2024-11-30T07:18:05.468Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://h0meb0dy.github.io/2024/02/02/V8-OOB-Exploitation-Chromium-100-0-4896-60-V8-10-0-136/</loc>
-        <lastmod>2024-11-30T07:18:01.395Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://h0meb0dy.github.io/2024/02/01/V8-OOB-Exploitation-Chromium-80-0-3987-87-V8-8-0-357/</loc>
-        <lastmod>2024-11-30T07:15:16.702Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
