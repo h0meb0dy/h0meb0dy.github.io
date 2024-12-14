@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Yet another off by one the v8 commits is 6dc88c191f5ecc5389dc26efa3ca0907faef3598. Attachment  Setup Ubuntu 20.04.6 LTS (WSL) 6dc88c191f5ecc5389dc26efa3ca0907faef3598 (2019.04.06.)  setup.sh Analysis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="[*CTF 2019 &#x2F; pwnable] oob-v8">
+<meta property="og:url" content="https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/index.html">
+<meta property="og:site_name" content="h0meb0dy">
+<meta property="og:description" content="Yet another off by one the v8 commits is 6dc88c191f5ecc5389dc26efa3ca0907faef3598. Attachment  Setup Ubuntu 20.04.6 LTS (WSL) 6dc88c191f5ecc5389dc26efa3ca0907faef3598 (2019.04.06.)  setup.sh Analysis">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://github.com/user-attachments/assets/eb6c0bb6-96c1-46f1-aa29-e8d10cde80ca">
+<meta property="og:image" content="https://github.com/user-attachments/assets/21c5a976-0a64-461c-803b-6bca81cb68ba">
+<meta property="og:image" content="https://github.com/user-attachments/assets/9c73e077-e94c-47ee-bb1b-9f663e92cdcc">
+<meta property="og:image" content="https://github.com/user-attachments/assets/bcff069a-01ef-4a01-9bbd-a12bc32e01d0">
+<meta property="og:image" content="https://github.com/user-attachments/assets/0e7fd867-3122-47c4-9cee-e3022208f9d9">
+<meta property="og:image" content="https://github.com/user-attachments/assets/73871fe3-6e7d-444d-b196-8b0d3a46e78d">
+<meta property="og:image" content="https://github.com/user-attachments/assets/ecdb3567-0670-4c01-998c-fc2d9c6a57da">
+<meta property="og:image" content="https://github.com/user-attachments/assets/8be0dc12-7338-43b8-81a8-a226e8372ce1">
+<meta property="og:image" content="https://github.com/user-attachments/assets/d4853ae4-9447-475a-801d-e6518be4b09c">
+<meta property="og:image" content="https://github.com/user-attachments/assets/9b45934e-ddb7-4690-8d9b-a8ffc9b97525">
+<meta property="article:published_time" content="2019-05-01T03:00:00.000Z">
+<meta property="article:modified_time" content="2024-12-14T05:02:54.465Z">
+<meta property="article:author" content="Seongjoon Cho">
+<meta property="article:tag" content="browser">
+<meta property="article:tag" content="chromium">
+<meta property="article:tag" content="v8">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://github.com/user-attachments/assets/eb6c0bb6-96c1-46f1-aa29-e8d10cde80ca">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>[*CTF 2019 / pwnable] oob-v8</title>
+    <!-- async scripts -->
+    <!-- Google Analytics -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-0JW360Q5KZ"></script>
+  <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-0JW360Q5KZ');
+  </script>
+
+
+    <!-- Umami Analytics -->
+
+
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fa-solid fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fa-solid fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2023/07/01/CVE-2020-6418/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fa-solid fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&text=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&is_video=false&description=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=[*CTF 2019 / pwnable] oob-v8&body=Check out this article: https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&name=[*CTF 2019 / pwnable] oob-v8&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&t=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    
+    
+      <div id="toc">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setup"><span class="toc-number">1.</span> <span class="toc-text">Setup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis"><span class="toc-number">2.</span> <span class="toc-text">Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Patch"><span class="toc-number">2.1.</span> <span class="toc-text">Patch</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploitation"><span class="toc-number">3.</span> <span class="toc-text">Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Addrof-fakeobj"><span class="toc-number">3.1.</span> <span class="toc-text">Addrof &#x2F; fakeobj</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AAR-AAW"><span class="toc-number">3.2.</span> <span class="toc-text">AAR &#x2F; AAW</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Execute-shellcode"><span class="toc-number">3.3.</span> <span class="toc-text">Execute shellcode</span></a></li></ol></li></ol>
+      </div>
+    
+  </span>
+</div>
+
+    
+    <div class="content index py4 ">
+        
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle p-name" itemprop="name headline">
+        [*CTF 2019 / pwnable] oob-v8
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author p-author h-card" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span class="p-name" itemprop="name">Seongjoon Cho</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2019-05-01T03:00:00.000Z" class="dt-published" itemprop="datePublished">2019-05-01</time>
+        
+      
+    </div>
+
+
+      
+    <div class="article-category">
+        <i class="fa-solid fa-archive"></i>
+        <a class="category-link" href="/categories/CTF/">CTF</a>
+    </div>
+
+
+      
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/browser/" rel="tag">browser</a>, <a class="p-category" href="/tags/chromium/" rel="tag">chromium</a>, <a class="p-category" href="/tags/v8/" rel="tag">v8</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content e-content" itemprop="articleBody">
+    <blockquote>
+<p>Yet another off by one</p>
+<p>the v8 commits is 6dc88c191f5ecc5389dc26efa3ca0907faef3598.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/CTF/tree/main/starCTF/2019/oob-v8/attachment">Attachment</a></p>
+</blockquote>
+<h2 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h2><ul>
+<li>Ubuntu 20.04.6 LTS (WSL)</li>
+<li><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8.git/+/6dc88c191f5ecc5389dc26efa3ca0907faef3598">6dc88c191f5ecc5389dc26efa3ca0907faef3598</a> (2019.04.06.)</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/CTF/tree/main/starCTF/2019/oob-v8/setup.sh">setup.sh</a></p>
+<h2 id="Analysis"><a href="#Analysis" class="headerlink" title="Analysis"></a>Analysis</h2><h3 id="Patch"><a href="#Patch" class="headerlink" title="Patch"></a>Patch</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">diff --git a/src/bootstrapper.cc b/src/bootstrapper.cc</span></span><br><span class="line"><span class="comment">index b027d36b5e9..ef1002fb3c9 100644</span></span><br><span class="line"><span class="comment">--- a/src/bootstrapper.cc</span></span><br><span class="line"><span class="comment">+++ b/src/bootstrapper.cc</span></span><br><span class="line"><span class="meta">@@ -1668,6 +1668,8 @@</span> void Genesis::InitializeGlobal(Handle&lt;JSGlobalObject&gt; global_object,</span><br><span class="line">                           Builtins::kArrayPrototypeCopyWithin, 2, false);</span><br><span class="line">     SimpleInstallFunction(isolate_, proto, &quot;fill&quot;,</span><br><span class="line">                           Builtins::kArrayPrototypeFill, 1, false);</span><br><span class="line"><span class="addition">+    SimpleInstallFunction(isolate_, proto, &quot;oob&quot;,</span></span><br><span class="line"><span class="addition">+                          Builtins::kArrayOob,2,false);</span></span><br><span class="line">     SimpleInstallFunction(isolate_, proto, &quot;find&quot;,</span><br><span class="line">                           Builtins::kArrayPrototypeFind, 1, false);</span><br><span class="line">     SimpleInstallFunction(isolate_, proto, &quot;findIndex&quot;,</span><br><span class="line"><span class="comment">diff --git a/src/builtins/builtins-definitions.h b/src/builtins/builtins-definitions.h</span></span><br><span class="line"><span class="comment">index 04472309fc0..f113a8179c5 100644</span></span><br><span class="line"><span class="comment">--- a/src/builtins/builtins-definitions.h</span></span><br><span class="line"><span class="comment">+++ b/src/builtins/builtins-definitions.h</span></span><br><span class="line"><span class="meta">@@ -368,6 +368,7 @@</span> namespace internal &#123;</span><br><span class="line">   TFJ(ArrayPrototypeFlat, SharedFunctionInfo::kDontAdaptArgumentsSentinel)     \</span><br><span class="line">   /* https://tc39.github.io/proposal-flatMap/#sec-Array.prototype.flatMap */   \</span><br><span class="line">   TFJ(ArrayPrototypeFlatMap, SharedFunctionInfo::kDontAdaptArgumentsSentinel)  \</span><br><span class="line"><span class="addition">+  CPP(ArrayOob)                                                                \</span></span><br><span class="line">                                                                                \</span><br><span class="line">   /* ArrayBuffer */                                                            \</span><br><span class="line">   /* ES #sec-arraybuffer-constructor */                                        \</span><br><span class="line"><span class="comment">diff --git a/src/compiler/typer.cc b/src/compiler/typer.cc</span></span><br><span class="line"><span class="comment">index ed1e4a5c6d8..c199e3a8086 100644</span></span><br><span class="line"><span class="comment">--- a/src/compiler/typer.cc</span></span><br><span class="line"><span class="comment">+++ b/src/compiler/typer.cc</span></span><br><span class="line"><span class="meta">@@ -1680,6 +1680,8 @@</span> Type Typer::Visitor::JSCallTyper(Type fun, Typer* t) &#123;</span><br><span class="line">       return Type::Receiver();</span><br><span class="line">     case Builtins::kArrayUnshift:</span><br><span class="line">       return t-&gt;cache_-&gt;kPositiveSafeInteger;</span><br><span class="line"><span class="addition">+    case Builtins::kArrayOob:</span></span><br><span class="line"><span class="addition">+      return Type::Receiver();</span></span><br><span class="line"> </span><br><span class="line">     // ArrayBuffer functions.</span><br><span class="line">     case Builtins::kArrayBufferIsView:</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><code>oob.diff</code>는 <code>Array</code> 클래스에 <code>oob</code>라는 이름의 새로운 built-in 함수를 추가한다.</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* src/builtins/builtins-array.cc */</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">BUILTIN</span>(ArrayOob)&#123;</span><br><span class="line">    <span class="type">uint32_t</span> len = args.<span class="built_in">length</span>();</span><br><span class="line">    <span class="keyword">if</span>(len &gt; <span class="number">2</span>) <span class="keyword">return</span> <span class="built_in">ReadOnlyRoots</span>(isolate).<span class="built_in">undefined_value</span>();</span><br><span class="line">    Handle&lt;JSReceiver&gt; receiver;</span><br><span class="line">    <span class="built_in">ASSIGN_RETURN_FAILURE_ON_EXCEPTION</span>(</span><br><span class="line">            isolate, receiver, Object::<span class="built_in">ToObject</span>(isolate, args.<span class="built_in">receiver</span>()));</span><br><span class="line">    Handle&lt;JSArray&gt; array = Handle&lt;JSArray&gt;::<span class="built_in">cast</span>(receiver);</span><br><span class="line">    FixedDoubleArray elements = FixedDoubleArray::<span class="built_in">cast</span>(array-&gt;<span class="built_in">elements</span>());</span><br><span class="line">    <span class="type">uint32_t</span> length = <span class="built_in">static_cast</span>&lt;<span class="type">uint32_t</span>&gt;(array-&gt;<span class="built_in">length</span>()-&gt;<span class="built_in">Number</span>());</span><br><span class="line">    <span class="keyword">if</span>(len == <span class="number">1</span>)&#123;</span><br><span class="line">        <span class="comment">//read</span></span><br><span class="line">        <span class="keyword">return</span> *(isolate-&gt;<span class="built_in">factory</span>()-&gt;<span class="built_in">NewNumber</span>(elements.<span class="built_in">get_scalar</span>(length)));</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        <span class="comment">//write</span></span><br><span class="line">        Handle&lt;Object&gt; value;</span><br><span class="line">        <span class="built_in">ASSIGN_RETURN_FAILURE_ON_EXCEPTION</span>(</span><br><span class="line">                isolate, value, Object::<span class="built_in">ToNumber</span>(isolate, args.<span class="built_in">at</span>&lt;Object&gt;(<span class="number">1</span>)));</span><br><span class="line">        elements.<span class="built_in">set</span>(length,value-&gt;<span class="built_in">Number</span>());</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">ReadOnlyRoots</span>(isolate).<span class="built_in">undefined_value</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>len</code>(argument의 개수)이 1인 경우 array로부터 <code>length</code> 위치에 있는 값을 읽어서 반환하고, <code>len</code>이 2인 경우 그 위치에 인자로 전달된 값을 쓴다. 즉 한 칸만큼의 OOB read&#x2F;write가 가능하다.</p>
+<p><img src="https://github.com/user-attachments/assets/eb6c0bb6-96c1-46f1-aa29-e8d10cde80ca" alt="image"></p>
+<p><img src="https://github.com/user-attachments/assets/21c5a976-0a64-461c-803b-6bca81cb68ba" alt="image"></p>
+<h2 id="Exploitation"><a href="#Exploitation" class="headerlink" title="Exploitation"></a>Exploitation</h2><h3 id="Addrof-fakeobj"><a href="#Addrof-fakeobj" class="headerlink" title="Addrof &#x2F; fakeobj"></a>Addrof &#x2F; fakeobj</h3><p>OOB를 이용하여 임의의 array에서 elements의 바로 뒤쪽에 위치한 자기 자신의 map을 읽거나 덮어쓸 수 있다.</p>
+<p><img src="https://github.com/user-attachments/assets/9c73e077-e94c-47ee-bb1b-9f663e92cdcc" alt="image"></p>
+<p><img src="https://github.com/user-attachments/assets/bcff069a-01ef-4a01-9bbd-a12bc32e01d0" alt="image"></p>
+<p>Object array의 map을 float array의 map으로 덮어쓰면 object array에 저장된 object를 읽어올때 float number로 가져오게 된다. 이 원리로 임의의 object의 주소를 구하는 <code>addrof</code> primitive를 구현할 수 있다. 반대로, object array에 float number를 저장하고 다시 원래의 map을 복구하면 그 float number가 object의 주소가 된다. 이 원리로 임의의 주소에 fake object를 생성하는 <code>fakeobj</code> primitive를 구현할 수 있다.</p>
+<h3 id="AAR-AAW"><a href="#AAR-AAW" class="headerlink" title="AAR &#x2F; AAW"></a>AAR &#x2F; AAW</h3><p>Float array의 구조를 만들고 그 위치에 fake object를 생성하면 elements 포인터를 임의의 주소로 설정하여 그 주소에 저장된 8바이트 값을 읽고 쓸 수 있다.</p>
+<p>8바이트 AAW를 이용하여 <code>ArrayBuffer</code>의 backing store를 임의의 주소로 덮어쓰면 그 주소에 <code>ArrayBuffer</code>의 크기만큼 임의의 값을 쓸 수 있다.</p>
+<p><img src="https://github.com/user-attachments/assets/0e7fd867-3122-47c4-9cee-e3022208f9d9" alt="image"></p>
+<p><img src="https://github.com/user-attachments/assets/73871fe3-6e7d-444d-b196-8b0d3a46e78d" alt="image"></p>
+<h3 id="Execute-shellcode"><a href="#Execute-shellcode" class="headerlink" title="Execute shellcode"></a>Execute shellcode</h3><p>WebAssembly instance를 생성하면 WebAssembly code를 실행하기 위해 RWX permission을 가진 메모리가 할당된다.</p>
+<p><img src="https://github.com/user-attachments/assets/ecdb3567-0670-4c01-998c-fc2d9c6a57da" alt="image"></p>
+<p><img src="https://github.com/user-attachments/assets/8be0dc12-7338-43b8-81a8-a226e8372ce1" alt="image"></p>
+<p>이 영역에 shellcode를 쓰고 WebAssembly instance의 exported function을 실행하면 shellcode를 실행할 수 있다.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/CTF/tree/main/starCTF/2019/oob-v8/pwn.js">pwn.js</a></p>
+<p><img src="https://github.com/user-attachments/assets/d4853ae4-9447-475a-801d-e6518be4b09c" alt="image"></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/CTF/tree/main/starCTF/2019/oob-v8/pwn.html">pwn.html</a></p>
+<p><img src="https://github.com/user-attachments/assets/9b45934e-ddb7-4690-8d9b-a8ffc9b97525" alt="image"></p>
+
+  </div>
+</article>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+        
+          <li><a href="/">Home</a></li>
+        
+          <li><a href="/about/">About</a></li>
+        
+          <li><a href="/archives/">Writing</a></li>
+        
+          <li><a href="/categories/">Category</a></li>
+        
+          <li><a href="/tags/">Tag</a></li>
+        
+          <li><a href="/search/">Search</a></li>
+        
+      </ul>
+    </div>
+
+    
+    
+      <div id="toc-footer" style="display: none">
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Setup"><span class="toc-number">1.</span> <span class="toc-text">Setup</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Analysis"><span class="toc-number">2.</span> <span class="toc-text">Analysis</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Patch"><span class="toc-number">2.1.</span> <span class="toc-text">Patch</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Exploitation"><span class="toc-number">3.</span> <span class="toc-text">Exploitation</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Addrof-fakeobj"><span class="toc-number">3.1.</span> <span class="toc-text">Addrof &#x2F; fakeobj</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AAR-AAW"><span class="toc-number">3.2.</span> <span class="toc-text">AAR &#x2F; AAW</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Execute-shellcode"><span class="toc-number">3.3.</span> <span class="toc-text">Execute shellcode</span></a></li></ol></li></ol>
+      </div>
+    
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&text=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&is_video=false&description=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=[*CTF 2019 / pwnable] oob-v8&body=Check out this article: https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&title=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&name=[*CTF 2019 / pwnable] oob-v8&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://h0meb0dy.github.io/2019/05/01/starCTF-2019-oob-v8/&t=[*CTF 2019 / pwnable] oob-v8"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fa-solid fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        
+          <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fa-solid fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fa-solid fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fa-solid fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2019-2024
+    Seongjoon Cho
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/archives/">Writing</a></li><!--
+     --><!--
+       --><li><a href="/categories/">Category</a></li><!--
+     --><!--
+       --><li><a href="/tags/">Tag</a></li><!--
+     --><!--
+       --><li><a href="/search/">Search</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" crossorigin="anonymous"></script>
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.7/clipboard.min.js" crossorigin="anonymous"></script>
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="fa-regular fa-clone"></i>';
+    btn += '</span>';
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Disqus Comments -->
+
+<!-- utterances Comments -->
+
+</body>
+</html>
