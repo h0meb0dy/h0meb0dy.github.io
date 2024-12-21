@@ -9,6 +9,14 @@
 
 
     <url>
+        <loc>https://h0meb0dy.github.io/Escaping-V8-Sandbox-via-Overwriting-WebAssembly-Jump-Table/</loc>
+        <lastmod>2024-12-21T03:26:14.041Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://h0meb0dy.github.io/CVE-2024-2887/</loc>
         <lastmod>2024-12-21T03:17:52.176Z</lastmod>
         <changefreq>weekly</changefreq>
