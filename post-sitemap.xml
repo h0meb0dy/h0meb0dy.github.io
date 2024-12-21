@@ -9,7 +9,7 @@
 
 
     <url>
-        <loc>https://h0meb0dy.github.io/1-day/CVE-2020-6418/</loc>
+        <loc>https://h0meb0dy.github.io/CVE-2020-6418/</loc>
         <lastmod>2024-12-14T05:51:13.385Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -17,7 +17,7 @@
     </url>
 
     <url>
-        <loc>https://h0meb0dy.github.io/CTF/starCTF-2019-oob-v8/</loc>
+        <loc>https://h0meb0dy.github.io/starCTF-2019-oob-v8/</loc>
         <lastmod>2024-12-14T05:51:10.618Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -25,7 +25,7 @@
     </url>
 
     <url>
-        <loc>https://h0meb0dy.github.io/Write-up/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/</loc>
+        <loc>https://h0meb0dy.github.io/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/</loc>
         <lastmod>2024-12-14T05:47:19.740Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -33,7 +33,7 @@
     </url>
 
     <url>
-        <loc>https://h0meb0dy.github.io/Write-up/Escaping-V8-Sandbox-via-RegExp-Bytecode/</loc>
+        <loc>https://h0meb0dy.github.io/Escaping-V8-Sandbox-via-RegExp-Bytecode/</loc>
         <lastmod>2024-12-14T05:46:53.663Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
@@ -41,7 +41,7 @@
     </url>
 
     <url>
-        <loc>https://h0meb0dy.github.io/Write-up/Escaping-V8-Sandbox-via-Turbofan-JIT-Spraying/</loc>
+        <loc>https://h0meb0dy.github.io/Escaping-V8-Sandbox-via-Turbofan-JIT-Spraying/</loc>
         <lastmod>2024-12-14T05:46:47.031Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
