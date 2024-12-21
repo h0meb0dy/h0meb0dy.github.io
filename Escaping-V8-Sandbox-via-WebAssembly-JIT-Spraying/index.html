@@ -21,7 +21,7 @@
 <meta property="og:image" content="https://github.com/user-attachments/assets/5469f1e9-a5f4-4617-9c04-58873a4723e2">
 <meta property="og:image" content="https://github.com/user-attachments/assets/b3a07117-565b-4eb4-850c-7e31572fc3cb">
 <meta property="article:published_time" content="2024-12-12T11:00:00.000Z">
-<meta property="article:modified_time" content="2024-12-14T05:47:19.740Z">
+<meta property="article:modified_time" content="2024-12-21T03:31:07.216Z">
 <meta property="article:author" content="Seongjoon Cho">
 <meta property="article:tag" content="browser">
 <meta property="article:tag" content="chromium">
@@ -217,7 +217,7 @@
 <p><a target="_blank" rel="noopener" href="https://github.com/h0meb0dy/Escaping-V8-Sandbox/tree/main/via%20WebAssembly%20JIT%20Spraying/pwn.js">pwn.js</a></p>
 <p><img src="https://github.com/user-attachments/assets/b3a07117-565b-4eb4-850c-7e31572fc3cb" alt="image"></p>
 <h2 id="Patch"><a href="#Patch" class="headerlink" title="Patch"></a>Patch</h2><blockquote>
-<p><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8/+/59acab802a319da23c1c005e062fbc2bab4d348b">wasm - Introduce WasmTrustedInstanceData</a> (2024.01.04.)<br>This CL moves most data from the WasmInstanceObject to a new WasmTrustedInstanceData. As the name suggests, this new object is allocated in the trusted space and can hence hold otherwise-unsafe data (like direct pointers). As the Wasm instance was still storing some unsafe pointers, this CL closes holes in the V8 sandbox, and allows us to land follow-up refactorings to remove more indirections for sandboxing (potentially after moving more data structures to the trusted space).</p>
+<p><a target="_blank" rel="noopener" href="https://chromium.googlesource.com/v8/v8/+/59acab802a319da23c1c005e062fbc2bab4d348b">[wasm] Introduce WasmTrustedInstanceData</a> (2024.01.04.)<br>This CL moves most data from the WasmInstanceObject to a new WasmTrustedInstanceData. As the name suggests, this new object is allocated in the trusted space and can hence hold otherwise-unsafe data (like direct pointers). As the Wasm instance was still storing some unsafe pointers, this CL closes holes in the V8 sandbox, and allows us to land follow-up refactorings to remove more indirections for sandboxing (potentially after moving more data structures to the trusted space).</p>
 </blockquote>
 
   </div>
