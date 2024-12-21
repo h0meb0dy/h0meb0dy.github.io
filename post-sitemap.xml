@@ -9,6 +9,14 @@
 
 
     <url>
+        <loc>https://h0meb0dy.github.io/CVE-2020-6418/</loc>
+        <lastmod>2024-12-21T03:38:21.735Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>https://h0meb0dy.github.io/Escaping-V8-Sandbox-via-WebAssembly-JIT-Spraying/</loc>
         <lastmod>2024-12-21T03:31:07.216Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -27,14 +35,6 @@
     <url>
         <loc>https://h0meb0dy.github.io/CVE-2024-2887/</loc>
         <lastmod>2024-12-21T03:17:52.176Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://h0meb0dy.github.io/CVE-2020-6418/</loc>
-        <lastmod>2024-12-14T05:51:13.385Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
